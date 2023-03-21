@@ -4,7 +4,7 @@ use store_flows::{del, get, set};
 
 #[no_mangle]
 pub fn run() {
-    listen_to_channel("reactor-space", "t1", |sm| {
+    listen_to_channel("secondstate", "chatgpt", |sm| {
         let last_result = match sm.text == "C" {
             true => {
                 del("last_result");
@@ -27,10 +27,10 @@ pub fn run() {
         match meval::eval_str(expr) {
             Ok(v) => {
                 set("last_result", json!(v));
-                send_message_to_channel("reactor-space", "t2", v.to_string());
+                send_message_to_channel("secondstate", "chatgpt", v.to_string());
             }
             Err(_) => {
-                send_message_to_channel("reactor-space", "t2", String::from("Invalid expression"));
+                send_message_to_channel("secondstate", "chatgpt", String::from("Invalid expression"));
             }
         }
     });
